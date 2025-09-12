@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Love Calculator ❤️</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Poppins", sans-serif; }
+
+    body {
+      background: linear-gradient(135deg, #fce4ec, #f3e5f5);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 30px;
+      color: #333;
+    }
+
+    h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 8px;
+      color: #d81b60;
+    }
+
+    p.subtitle {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #666;
+    }
+
+    .calculator-box {
+      background: #fff;
+      padding: 25px;
+      border-radius: 16px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 650px;
+      margin-bottom: 25px;
+      text-align: center;
+    }
+
+    .inputs {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    .inputs div {
+      flex: 1;
+      min-width: 220px;
+      text-align: left;
+    }
+
+    label {
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 6px;
+      display: block;
+      color: #444;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 2px solid #ddd;
+      font-size: 15px;
+      outline: none;
+      transition: 0.3s;
+    }
+
+    input:focus { border-color: #d81b60; }
+
+    button {
+      padding: 14px 20px;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #ff4081, #7c4dff);
+      color: #fff;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    button:hover { transform: translateY(-2px); }
+
+    /* Warning message */
+    .warning {
+      color: #d32f2f;
+      font-size: 14px;
+      margin-top: 6px;
+      display: none;
+      animation: shake 0.3s ease;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-4px); }
+      50% { transform: translateX(4px); }
+      75% { transform: translateX(-4px); }
+    }
+
+    .hidden { display: none; }
+
+    /* Result */
+    .result { margin-top: 20px; text-align: center; }
+    .percentage {
+      font-size: 3rem;
+      font-weight: 800;
+      margin-bottom: 10px;
+      background: linear-gradient(135deg, #3f51b5, #e91e63);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .message { font-size: 18px; font-weight: 500; margin-bottom: 12px; }
+    .progress {
+      height: 10px;
+      width: 100%;
+      background: #eee;
+      border-radius: 8px;
+      overflow: hidden;
+      margin-top: 12px;
+    }
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(135deg, #3f51b5, #ff4081);
+      transition: width 0.8s ease;
+    }
+
+    /* Steps Section */
+    .steps {
+      background: #fff;
+      padding: 20px;
+      border-radius: 16px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 650px;
+      margin-top: 20px;
+    }
+
+    .steps h3 { margin-bottom: 12px; font-size: 18px; font-weight: 600; color: #444; }
+    .step { display: flex; align-items: center; margin-bottom: 12px; }
+    .step span {
+      background: #d81b60;
+      color: #fff;
+      font-size: 14px;
+      font-weight: bold;
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 10px;
+    }
+    .numbers {
+      background: #f8f9fa;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 15px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .footer {
+      margin-top: 15px;
+      font-size: 14px;
+      color: #777;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <h1>♡ Love Calculator ♡</h1>
+  <p class="subtitle">Discover your romantic compatibility percentage!</p>
+
+  <div class="calculator-box">
+    <div class="inputs">
+      <div>
+        <label>👤 First Person</label>
+        <input type="text" id="name1" placeholder="Enter first name...">
+      </div>
+      <div>
+        <label>💖 Second Person</label>
+        <input type="text" id="name2" placeholder="Enter second name...">
+      </div>
+    </div>
+    <div id="warning" class="warning">⚠️ Please enter both names!</div>
+    <button onclick="calculateLove()">🧮 Calculate Love 💌</button>
+
+    <div class="result hidden" id="result-box">
+      <div class="percentage" id="percentage">--%</div>
+      <div class="message" id="message">Enter names to see result!</div>
+      <div class="progress">
+        <div class="progress-bar" id="progress-bar"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="steps hidden" id="steps-box">
+    <h3>✨ Your Calculation Steps</h3>
+    <div id="steps-list"></div>
+  </div>
+
+  <p class="footer">Just for fun! Results are not scientifically accurate 😅</p>
+
+  <script>
+    const name1Input = document.getElementById("name1");
+    const name2Input = document.getElementById("name2");
+    const warning = document.getElementById("warning");
+
+    // hide warning while typing
+    [name1Input, name2Input].forEach(input => {
+      input.addEventListener("input", () => {
+        if (name1Input.value.trim() && name2Input.value.trim()) {
+          warning.style.display = "none";
+        }
+      });
+    });
+
+    function calculateLove() {
+      let name1 = name1Input.value.trim().toLowerCase();
+      let name2 = name2Input.value.trim().toLowerCase();
+
+      if (!name1 || !name2) {
+        warning.style.display = "block";
+        warning.style.animation = "shake 0.3s ease"; 
+        setTimeout(() => { warning.style.animation = ""; }, 300);
+        return;
+      } else {
+        warning.style.display = "none";
+      }
+
+      // 1. Combine names
+      let combined = (name1 + name2).replace(/ /g, "");
+
+      // 2. Count frequencies
+      let freq = [];
+      for (let char of combined) {
+        freq.push([...combined].filter(c => c === char).length);
+      }
+
+      let steps = [];
+      steps.push([...freq]);
+
+      // 3. Pair and sum until we reach 2 numbers
+      while (freq.length > 2) {
+        let newFreq = [];
+        for (let i = 0; i < Math.floor(freq.length / 2); i++) {
+          let sum = freq[i] + freq[freq.length - 1 - i];
+          if (sum >= 10) {
+            newFreq.push(...sum.toString().split("").map(Number));
+          } else {
+            newFreq.push(sum);
+          }
+        }
+        if (freq.length % 2 === 1) {
+          newFreq.push(freq[Math.floor(freq.length / 2)]);
+        }
+        freq = newFreq;
+        steps.push([...freq]);
+      }
+
+      let finalPercentage = parseInt(freq.join(""));
+      if (finalPercentage > 100) finalPercentage = 100;
+
+      document.getElementById("percentage").innerText = finalPercentage + "%";
+
+      // progress bar animation fix
+      const progressBar = document.getElementById("progress-bar");
+      progressBar.style.width = "0%";
+      setTimeout(() => {
+        progressBar.style.width = finalPercentage + "%";
+      }, 50);
+
+      let msg = "Perfect Match! 💕";
+      if (finalPercentage < 50) msg = "Keep Trying! 💪";
+      else if (finalPercentage < 75) msg = "Nice Compatibility! 🌸";
+      document.getElementById("message").innerText = msg;
+
+      let stepsList = document.getElementById("steps-list");
+      stepsList.innerHTML = "";
+      steps.forEach((s, i) => {
+        let div = document.createElement("div");
+        div.className = "step";
+        div.innerHTML = `<span>${i + 1}</span><div class="numbers">${s.join(" ")}</div>`;
+        stepsList.appendChild(div);
+      });
+
+      document.getElementById("result-box").classList.remove("hidden");
+      document.getElementById("steps-box").classList.remove("hidden");
+    }
+  </script>
+</body>
+</html>
